@@ -1,3 +1,7 @@
 export default function Page() {
-    return <p>Progress Page</p>;
+return (
+        <div className="container">
+            Test progress page
+        </div>
+    );
 }
