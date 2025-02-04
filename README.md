@@ -6,7 +6,7 @@
   - [ ] Student
   - [ ] Admin
 - [ ] Use Tailwind to manage responsive
-- [ ] Manage data with serveer actions
+- [ ] Manage data with server actions
 - [ ] Use layouts and routing
 - [ ] Create validation form
 - [ ] Optimizing performances with streaming
