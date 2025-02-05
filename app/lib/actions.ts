@@ -62,7 +62,7 @@ export type StateCourses = {
   message?: string | null;
 };
 
-export async function createCourses(prevState: StateCourses, formData: FormData): Promise<StateCourses> {
+export async function createCourse(prevState: StateCourses, formData: FormData): Promise<StateCourses> {
   const capacityValue = formData.get("capacity");
   const capacityNumber = capacityValue ? Number(capacityValue) : NaN;
 
@@ -89,6 +89,9 @@ export async function createCourses(prevState: StateCourses, formData: FormData)
   console.log(title, description, instrument, level, schedule, capacityNumber);
   try {
     console.log("Inserting course :", title, description, instrument, level, schedule, capacityNumber);
+    if (isNaN(capacityNumber)) {
+      throw new Error("Capacity must be a valid number");
+    }
     await sql`
     INSERT INTO courses (title, description, instrument, teacherId, level, schedule, capacity)
     VALUES (${title}, ${description}, ${instrument}, '410544b2-4001-4271-9855-fec4b6a6442a', ${level}, ${schedule}, ${capacityNumber})
@@ -99,6 +102,60 @@ export async function createCourses(prevState: StateCourses, formData: FormData)
   revalidatePath("/teacher/courses");
   redirect("/teacher/courses");
 }
+
+export async function updateCourse(
+  prevState: StateCourses,
+  formData: FormData
+): Promise<StateCourses> {
+  const id = formData.get("id") as string;
+  const capacityValue = formData.get("capacity");
+  const capacityNumber = capacityValue ? Number(capacityValue) : NaN;
+
+  const validatedFields = UpdateCourses.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+    instrument: formData.get("instrument"),
+    level: formData.get("level"),
+    schedule: formData.get("schedule"),
+    capacity: capacityNumber,
+  });
+
+  if (!validatedFields.success) {
+    const fieldErrors = validatedFields.error.flatten().fieldErrors;
+    const formattedErrors = Object.fromEntries(
+      Object.entries(fieldErrors).map(([key, value]) => [key, value?.[0]])
+    );
+
+    return {
+      message: null,
+      errors: formattedErrors,
+    };
+  }
+
+  const { title, description, instrument, level, schedule } = validatedFields.data;
+
+  try {
+    console.log("Updating course:", title, description, instrument, level, schedule, capacityNumber);
+    await sql`
+      UPDATE courses
+      SET title = ${title}, description = ${description}, instrument = ${instrument},
+          level = ${level}, schedule = ${schedule}, capacity = ${capacityNumber}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    console.error(error);
+    return { message: "Error updating course.", errors: {} };
+  }
+
+  revalidatePath("/teacher/courses");
+  redirect("/teacher/courses");
+}
+
+export async function deleteCourse(id: string) {
+  await sql`DELETE FROM courses WHERE id = ${id}`;
+  revalidatePath("/teacher/courses");
+}
+
 
 // Users 
 
