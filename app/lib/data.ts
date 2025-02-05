@@ -1,4 +1,4 @@
-import { CoursesTable } from "./definiton";
+import { CoursesTable } from "./definitions";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
