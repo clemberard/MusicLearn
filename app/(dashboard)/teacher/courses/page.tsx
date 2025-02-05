@@ -20,10 +20,8 @@ export default async function Page(props: {
     <>
       <Navbar />
 
-      <div className="w-full">
-        <div className="flex w-full items-center justify-between">
+      <div className="w-full container mx-auto mt-4">
           <h1 className={`text-2xl`}>Courses</h1>
-        </div>
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
           <Search placeholder="Search Courses..." />
           <CreateCourses />

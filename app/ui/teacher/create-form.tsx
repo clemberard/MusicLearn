@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 //import { Button } from "@/app/ui/button";
-import { createCourses, StateCourses } from "@/app/lib/actions";
+import { createCourse, StateCourses } from "@/app/lib/actions";
 import { useActionState } from "react";
 
 export default function Form() {
   const initialState: StateCourses = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createCourses, initialState);
+  const [state, formAction] = useActionState(createCourse, initialState);
 
   return (
     <form action={formAction}>
@@ -89,7 +89,7 @@ export default function Form() {
           Cancel
         </Link>
         <button type="submit" className="flex h-10 items-center rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-600">
-          Create Courses
+          Create Course
         </button>
       </div>
     </form>
