@@ -81,7 +81,6 @@ export async function fetchCoursesPages(query: string) {
   }
 }
 
-
 export async function fetchCourseById(id: string) {
     try {
         const course = await sql<Course[]>`
