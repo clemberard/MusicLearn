@@ -1,7 +1,12 @@
 import SignOut from "@/app/signout/signout";
 import Link from 'next/link';
+import { getUser } from "@/app/lib/actions";
+import { auth } from "@/auth"
 
 export default async function Navbar() {
+  const session = await auth()
+  const user = await getUser(session?.user?.email)
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -31,18 +36,42 @@ export default async function Navbar() {
                       <Link href="#"
                           className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Services</Link>
                   </li>
-                  <li>
-                      <Link href="/teacher/courses" passHref
-                          className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Courses</Link>
-                  </li>
-                  <li>
-                      <Link href="/register" passHref
-                          className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Registration</Link>
-                  </li>
-                  <li>
+                  {user?.role === 'professor' ? (
+                      <li>
+                        <Link href="/teacher/courses" passHref
+                            className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Courses</Link>
+                      </li>
+                    ) : user?.role === 'student' ? (
+                      <li>
+                        <Link href="/student/courses" passHref
+                            className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Courses</Link>
+                      </li>
+                    ) : user?.role === 'admin' ? (
+                      <>
+                        <li>
+                          <Link href="/teacher/courses" passHref
+                              className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Teacher Courses</Link>
+                        </li>
+
+                        <li>
+                          <Link href="/student/courses" passHref
+                              className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Student Courses</Link>
+                        </li>
+
+                        <li>
+                          <Link href="/register" passHref
+                            className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Registration</Link>
+                        </li>
+                      </>
+                    ) : null
+                    }
+                  { !user? (
+                    <li>
                       <Link href="/login" passHref
                           className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Login</Link>
-                  </li>
+                    </li>                
+                  ) : null
+                  }
                   <li>
                     <SignOut />
                   </li>
