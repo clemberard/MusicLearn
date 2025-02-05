@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { UpdateCourse } from '@/app/ui/teacher/buttons';
+import { UpdateCourse, DeleteCourse } from '@/app/ui/teacher/buttons';
 import { fetchCourses, fetchFilteredCourses } from '@/app/lib/data';
 
 export async function CoursesTableFiltre({
@@ -68,7 +68,7 @@ export async function CoursesTableFiltre({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateCourse id={courses.id} />
-                      {/* <DeleteInvoice id={invoice.id} /> */}
+                      <DeleteCourse id={courses.id} />
                     </div>
                   </td>
                 </tr>

@@ -151,6 +151,11 @@ export async function updateCourse(
   redirect("/teacher/courses");
 }
 
+export async function deleteCourse(id: string) {
+  await sql`DELETE FROM courses WHERE id = ${id}`;
+  revalidatePath("/teacher/courses");
+}
+
 
 // Users 
 
