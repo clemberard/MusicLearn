@@ -98,3 +98,65 @@ export async function createCourses(prevState: StateCourses, formData: FormData)
   revalidatePath("/teacher/courses");
   redirect("/teacher/courses");
 }
+
+// Users 
+
+const FormSchemaUsers = z.object({
+  name: z.string({
+    invalid_type_error: "Name must be a string",
+  }),
+  email: z.string({
+    invalid_type_error: "Email must be a string",
+  }),
+  password: z.string({
+    invalid_type_error: "Password must be a string",
+  }),
+  role: z.string({
+    invalid_type_error: "Role must be a string",
+  }),
+});
+
+const CreateUsers = FormSchemaUsers;
+
+export type StateUsers = {
+  errors?: {
+    name?: string;
+    email?: string;
+    password?: string;
+    role?: string;
+  };
+  message?: string | null;
+};
+
+export async function createUsers(state: StateUsers, formData: FormData): Promise<StateUsers> {
+  const validatedFieldsUsers = CreateUsers.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    role: formData.get("role"),
+  });
+
+  if (!validatedFieldsUsers.success) {
+    const fieldErrors = validatedFieldsUsers.error.flatten().fieldErrors;
+
+    const formattedErrors = Object.fromEntries(Object.entries(fieldErrors).map(([key, value]) => [key, value?.[0]]));
+
+    return {
+      message: null,
+      errors: formattedErrors,
+    };
+  }
+  const { name, email, password, role } = validatedFieldsUsers.data;
+  console.log(name, email, password, role);
+  try {
+    await sql`
+    INSERT INTO users (name, email, password, role)
+    VALUES (${name}, ${email}, ${password}, ${role})
+  `;
+  } catch (error) {
+    console.error(error);
+  }
+  redirect("/register");
+}
+
+
