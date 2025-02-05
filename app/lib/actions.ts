@@ -6,6 +6,7 @@ import z from "zod";
 import postgres from "postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import bcrypt from "bcryptjs";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
@@ -151,7 +152,7 @@ export async function createUsers(state: StateUsers, formData: FormData): Promis
   try {
     await sql`
     INSERT INTO users (name, email, password, role)
-    VALUES (${name}, ${email}, ${password}, ${role})
+    VALUES (${name}, ${email}, ${bcrypt.hashSync(password, bcrypt.genSaltSync(10))}, ${role})
   `;
   } catch (error) {
     console.error(error);
