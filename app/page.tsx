@@ -1,3 +1,5 @@
+import { signOut } from "@/auth";
+
 export default function Page() {
     return (
         <>
@@ -43,6 +45,16 @@ export default function Page() {
                             <li>
                                 <a href="/login"
                                    className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Login</a>
+                            </li>
+                            <li>
+                              <form action={async () => {
+                                'use server';
+                                await signOut({ redirectTo: '/' });
+                              }}>
+                                <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
+                                  <div className="hidden md:block">Logout</div>
+                                </button>
+                              </form>
                             </li>
                         </ul>
                     </div>
