@@ -1,4 +1,4 @@
-import { CoursesTable } from "./definitions";
+import { CoursesTable, Course } from "./definitions";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
@@ -79,4 +79,54 @@ export async function fetchCoursesPages(query: string) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch total number of courses.");
   }
+}
+
+
+export async function fetchCourseById(id: string) {
+    try {
+        const course = await sql<Course[]>`
+      SELECT
+        courses.id,
+        courses.title,
+        courses.description,
+        courses.instrument,
+        courses.teacherId,
+        courses.level,
+        courses.schedule,
+        courses.capacity
+      FROM courses
+      WHERE courses.id = ${id}
+    `;
+
+        return course[0];
+    } catch (error) {
+        console.log('id', id);
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch course.');
+    }
+}
+
+export async function fetchProgresses() {
+    try {
+        const progresses = await sql`
+      SELECT
+        progresses.id,
+        progresses.courseId,
+        progresses.studentId,
+        progresses.date,
+        progresses.evaluation,
+        progresses.comments
+      FROM progresses
+    `;
+
+        progresses.forEach((progress: any) => {
+            progress.date = new Date(progress.date);
+            progress.courseName = fetchCourseById(progress.courseid).then((course) => course.title);
+        });
+
+        return progresses;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch progress.');
+    }
 }

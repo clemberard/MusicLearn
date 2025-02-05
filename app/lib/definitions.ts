@@ -16,3 +16,14 @@ export type CoursesTable = {
   schedule: string;
   capacity: number;
 };
+
+export type Course = {
+    id: string,
+    title: string,
+    description: string,
+    instrument: string,
+    teacherId: string,
+    level: string,
+    schedule: string,
+    capacity: number,
+}
