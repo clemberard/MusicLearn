@@ -35,4 +35,5 @@ export type Course = {
     level: string,
     schedule: string,
     capacity: number,
+    enrollment: 
 }

@@ -1,6 +1,5 @@
-import Image from 'next/image';
 import { UpdateCourse, DeleteCourse } from '@/app/ui/teacher/buttons';
-import { fetchCourses, fetchFilteredCourses } from '@/app/lib/data';
+import { fetchFilteredCourses } from '@/app/lib/data';
 
 export async function CoursesTableFiltre({
   query,

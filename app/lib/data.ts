@@ -110,7 +110,7 @@ export async function fetchCourseById(id: string) {
     }
 }
 
-export async function fetchProgresses(userId = 0) {
+export async function fetchProgresses() {
     try {
         const progresses = await sql`
       SELECT

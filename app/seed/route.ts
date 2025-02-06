@@ -45,7 +45,7 @@ async function seedCourses() {
             );
     `;
 
-    const insertedCourses = await Promise.all(
+    await Promise.all(
         courses.map(async (course: { id: string; title: string; description: string; instrument: string, teacherId: string, level: string, schedule: string, capacity: number }) => {
             return sql`
                 INSERT INTO courses (id, title, description, instrument, teacherId, level, schedule, capacity)
@@ -67,7 +67,7 @@ async function seedEnrollments() {
             );
     `;
 
-    const insertedEnrollments = await Promise.all(
+    await Promise.all(
         enrollments.map(async (enrollment: { id: string; studentId: string; courseId: string, enrollmentDate: string, status: string }) => {
             return sql`
                 INSERT INTO enrollments (id, studentId, courseId, enrollmentDate, status)
@@ -90,7 +90,7 @@ async function seedProgresses() {
             );
     `;
 
-    const insertedProgresses = await Promise.all(
+    await Promise.all(
         progresses.map(async (progress: { id: string; studentId: string; courseId: string, date: string, evaluation: string, comments: string }) => {
             return sql`
                 INSERT INTO progresses (id, studentId, courseId, date, evaluation, comments)
@@ -102,7 +102,7 @@ async function seedProgresses() {
 
 export async function GET() {
     try {
-        const result = await sql.begin((sql) => [
+        await sql.begin(() => [
             seedUsers(),
             seedCourses(),
             seedEnrollments(),
