@@ -158,6 +158,65 @@ export async function deleteCourse(id: string) {
   revalidatePath("/teacher/courses");
 }
 
+// Enrollment
+
+const FormSchemaEnrollment = z.object({
+  userId: z.string({
+    invalid_type_error: "User ID must be a string",
+  }),
+  courseId: z.string({
+    invalid_type_error: "Course ID must be a string",
+  }),
+});
+
+const Enrollment = FormSchemaEnrollment;
+
+export type StateEnrollment = {
+  errors?: {
+    userId?: string;
+    courseId?: string;
+  };
+  message?: string | null;
+};
+
+export async function enrollStudent(state: StateEnrollment, formData: FormData): Promise<StateEnrollment> {
+  const validatedFields = Enrollment.safeParse({
+    userId: formData.get("userId"),
+    courseId: formData.get("courseId"),
+  });
+
+  if (!validatedFields.success) {
+    const fieldErrors = validatedFields.error.flatten().fieldErrors;
+
+    const formattedErrors = Object.fromEntries(Object.entries(fieldErrors).map(([key, value]) => [key, value?.[0]]));
+
+    return {
+      message: null,
+      errors: formattedErrors,
+    };
+  }
+  const { userId, courseId } = validatedFields.data;
+  try {
+  if (!userId || !courseId) {
+    return {
+      message: "User ID and Course ID must be provided.",
+      errors: {
+        userId: !userId ? "User ID is required" : undefined,
+        courseId: !courseId ? "Course ID is required" : undefined,
+      },
+    };
+  }
+
+  await sql`
+    INSERT INTO enrollments (studentId, courseId, status)
+    VALUES (${userId}, ${courseId}, 'en attente')
+  `;
+  } catch (error) {
+    console.error(error);
+  }
+  redirect("/student/courses");
+}
+
 
 // Users 
 

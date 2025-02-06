@@ -3,7 +3,7 @@ import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
-export async function fetchCourses() {
+export async function fetchCourses(userId = 0) {
   try {
       const courses = await sql<CoursesTable[]>`
     SELECT
@@ -17,6 +17,14 @@ export async function fetchCourses() {
       courses.capacity
     FROM courses
   `;
+      if (userId) {
+        await Promise.all(courses.map(async (course: any) => {
+            const enrollment = await fetchEnrollmentByCourseIdAndUserId(course.id.toString(), userId.toString());
+            course.enrollment = (enrollment.length > 0) ? enrollment[0] : null;
+        }));
+      }
+
+      console.log(courses)
 
       return courses;
   } catch (error) {
@@ -127,5 +135,21 @@ export async function fetchProgresses() {
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch progress.');
+    }
+}
+
+export async function fetchEnrollmentByCourseIdAndUserId(courseId: string, userId: string) {
+    try {
+        const enrollment = await sql`
+      SELECT
+        *
+      FROM enrollments
+      WHERE courseId = ${courseId} AND studentId = ${userId}
+    `;
+
+        return enrollment;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch enrollment.');
     }
 }
