@@ -1,4 +1,4 @@
-import {fetchCourses, fetchProgresses } from '@/app/lib/data';
+import {fetchCourses, fetchProgressesByStudent} from '@/app/lib/data';
 import {EnrollmentButton} from "@/app/ui/student/button";
 import Link from 'next/link';
 import { getUser } from "@/app/lib/actions";
@@ -33,7 +33,7 @@ export async function CoursesTable() {
                                 className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                             >
                                 <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                                    <Link target={'_blank'} href={`/student/courses/${course.id}/show`} className={"font-medium text-blue-600 dark:text-blue-500 hover:underline"}>
+                                    <Link href={`/student/courses/${course.id}/show`} className={"font-medium text-blue-600 dark:text-blue-500 hover:underline"}>
                                         {course.title}
                                     </Link>
                                 </td>
@@ -61,7 +61,9 @@ export async function CoursesTable() {
 }
 
 export async function ProgressesTable() {
-    const progresses = await fetchProgresses();
+    const session = await auth()
+    const user = await getUser(session?.user?.email)
+    const progresses = await fetchProgressesByStudent(user.id);
 
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
