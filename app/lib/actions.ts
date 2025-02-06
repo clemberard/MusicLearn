@@ -209,7 +209,7 @@ export async function enrollStudent(state: StateEnrollment, formData: FormData):
 
   await sql`
     INSERT INTO enrollments (studentId, courseId, status)
-    VALUES (${userId}, ${courseId}, 'en attente')
+    VALUES (${userId}, ${courseId}, 'Waiting response')
   `;
   } catch (error) {
     console.error(error);

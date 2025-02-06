@@ -24,8 +24,6 @@ export async function fetchCourses(userId = 0) {
         }));
       }
 
-      console.log(courses)
-
       return courses;
   } catch (error) {
       console.error('Database Error:', error);
