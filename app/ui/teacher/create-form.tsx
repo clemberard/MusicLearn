@@ -1,15 +1,17 @@
-"use client";
+'use client'
 import Link from "next/link";
-//import { Button } from "@/app/ui/button";
-import { createCourse, StateCourses } from "@/app/lib/actions";
+import { createCourse, getUser, StateCourses } from "@/app/lib/actions";
 import { useActionState } from "react";
 
-export default function Form() {
+export default function Form({teacherid} : {teacherid:string}) {
   const initialState: StateCourses = { message: null, errors: {} };
   const [state, formAction] = useActionState(createCourse, initialState);
 
   return (
+  <>
+    
     <form action={formAction}>
+    <input type="hidden" name="teacherid" id="teacherid" value={teacherid} />
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Title */}
         <div className="mb-4">
@@ -93,5 +95,6 @@ export default function Form() {
         </button>
       </div>
     </form>
-  );
+  </>
+  )
 }

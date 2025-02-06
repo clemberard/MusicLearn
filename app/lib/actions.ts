@@ -75,6 +75,8 @@ export async function createCourse(prevState: StateCourses, formData: FormData):
     capacity: capacityNumber,
   });
 
+  const teacherId = formData.get("teacherid") as string | null;
+ console.log(teacherId)
   if (!validatedFields.success) {
     const fieldErrors = validatedFields.error.flatten().fieldErrors;
 
@@ -94,7 +96,7 @@ export async function createCourse(prevState: StateCourses, formData: FormData):
     }
     await sql`
     INSERT INTO courses (title, description, instrument, teacherId, level, schedule, capacity)
-    VALUES (${title}, ${description}, ${instrument}, '410544b2-4001-4271-9855-fec4b6a6442a', ${level}, ${schedule}, ${capacityNumber})
+    VALUES (${title}, ${description}, ${instrument}, ${teacherId ?? ''} , ${level}, ${schedule}, ${capacityNumber})
   `;
   } catch (error) {
     console.error(error);

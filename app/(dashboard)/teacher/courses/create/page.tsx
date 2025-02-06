@@ -1,21 +1,13 @@
+import { getUser } from '@/app/lib/actions';
 import Form from '@/app/ui/teacher/create-form';
-//import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
+import { auth } from "@/auth"
+import Navbar from "@/app/ui/layout/navbar";
  
 export default async function Page() {
- 
   return (
-    <main>
-      {/* <Breadcrumbs
-        breadcrumbs={[
-          { label: 'Invoices', href: '/dashboard/invoices' },
-          {
-            label: 'Create Invoice',
-            href: '/dashboard/invoices/create',
-            active: true,
-          },
-        ]}
-      /> */}
+    <>
+      <Navbar />
       <Form />
-    </main>
+    </>
   );
 }
