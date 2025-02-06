@@ -1,7 +1,5 @@
 'use server'
 
-import Link from "next/link";
-
 import Form from '@/app/ui/teacher/create-form';
 import { auth } from "@/auth";
 import { getUser } from "@/app/lib/actions";

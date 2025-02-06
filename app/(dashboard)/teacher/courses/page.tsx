@@ -1,6 +1,5 @@
 import Search from "@/app/ui/search";
 import { CreateCourses } from "@/app/ui/teacher/buttons";
-import { fetchCoursesPages } from "@/app/lib/data";
 import { CoursesTableSkeleton } from "@/app/ui/skeleton";
 import { Suspense } from "react";
 import { CoursesTableFiltre } from "@/app/ui/teacher/table";

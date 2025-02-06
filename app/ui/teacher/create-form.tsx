@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { createCourse, getUser, StateCourses } from "@/app/lib/actions";
+import { createCourse, StateCourses } from "@/app/lib/actions";
 import { useActionState } from "react";
 
 export default function Form({teacherid} : {teacherid:string}) {
