@@ -6,8 +6,8 @@ import { auth } from "@/auth"
 
 export async function CoursesTable() {
     const session = await auth()
-    const user = await getUser(session?.user?.email)
-    const courses = await fetchCourses(user.id);
+    const user = session?.user?.email ? await getUser(session.user.email) : null;
+    const courses = await fetchCourses(user?.id);
 
     return (
         <div className="mt-6 flow-root">
@@ -45,7 +45,7 @@ export async function CoursesTable() {
                                     {
                                     course.enrollment ? ( course.enrollment.status ) : 
                                     (
-                                    <EnrollmentButton userId={user.id} courseId={course.id}>
+                                    <EnrollmentButton userId={user?.id} courseId={course.id}>
                                         Enroll
                                     </EnrollmentButton>
                                     )}
@@ -62,8 +62,8 @@ export async function CoursesTable() {
 
 export async function ProgressesTable() {
     const session = await auth()
-    const user = await getUser(session?.user?.email)
-    const progresses = await fetchProgressesByStudent(user.id);
+    const user = session?.user?.email ? await getUser(session.user.email) : null;
+    const progresses = await fetchProgressesByStudent(user?.id);
 
     await new Promise((resolve) => setTimeout(resolve, 3000));
 

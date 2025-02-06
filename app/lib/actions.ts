@@ -7,7 +7,6 @@ import postgres from "postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
-import { fetchNumberEnrollmentsByCourseId, fetchCourseById } from "@/app/lib/data";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
@@ -209,17 +208,6 @@ export async function enrollStudent(state: StateEnrollment, formData: FormData):
     };
   }
 
-  const course = await fetchCourseById(courseId);
-
-  if (!await disponibility(courseId, course.capacity)) {
-    return {
-      message: "Course is full.",
-      errors: {
-        courseId: "Course is full.",
-      },
-    };
-  }
-
   await sql`
     INSERT INTO enrollments (studentId, courseId, status)
     VALUES (${userId}, ${courseId}, 'Waiting response')
@@ -313,9 +301,4 @@ export async function fetchUsers() {
   }
 }
 
-// private
 
-async function disponibility(courseId: string, capacity: number) {
-  const enrollments = await fetchNumberEnrollmentsByCourseId(courseId);
-  return enrollments < capacity;
-}

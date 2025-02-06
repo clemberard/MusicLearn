@@ -5,7 +5,7 @@ import { auth } from "@/auth"
 
 export default async function Navbar() {
   const session = await auth()
-  const user = await getUser(session?.user?.email)
+  const user = session?.user?.email ? await getUser(session.user.email) : null;
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">

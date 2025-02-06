@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { CoursesTable, Course } from "./definitions";
 import postgres from "postgres";
 
@@ -32,7 +34,7 @@ export async function fetchCourses(userId = 0) {
 }
 
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 12;
 
 export async function fetchFilteredCourses(query: string, currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;

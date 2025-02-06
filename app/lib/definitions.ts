@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export type User = {
   id: string;
   name: string;
@@ -17,6 +19,7 @@ export type UsersTable = {
 };
 
 export type CoursesTable = {
+  enrollment: any;
   id: string;
   title: string;
   description: string;
@@ -35,5 +38,5 @@ export type Course = {
     level: string,
     schedule: string,
     capacity: number,
-    enrollment: 
+    enrollment: number;
 }
