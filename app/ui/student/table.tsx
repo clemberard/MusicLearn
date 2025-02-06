@@ -1,4 +1,4 @@
-import {fetchCourses, fetchProgresses} from '@/app/lib/data';
+import {fetchCourses, fetchProgressesByStudent} from '@/app/lib/data';
 import {EnrollmentButton} from "@/app/ui/student/button";
 import Link from 'next/link';
 import { getUser } from "@/app/lib/actions";
@@ -61,7 +61,9 @@ export async function CoursesTable() {
 }
 
 export async function ProgressesTable() {
-    const progresses = await fetchProgresses();
+    const session = await auth()
+    const user = await getUser(session?.user?.email)
+    const progresses = await fetchProgressesByStudent(user.id);
 
     await new Promise((resolve) => setTimeout(resolve, 3000));
 

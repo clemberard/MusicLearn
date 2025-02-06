@@ -105,13 +105,12 @@ export async function fetchCourseById(id: string) {
 
         return course[0];
     } catch (error) {
-        console.log('id', id);
         console.error('Database Error:', error);
         throw new Error('Failed to fetch course.');
     }
 }
 
-export async function fetchProgresses() {
+export async function fetchProgresses(userId = 0) {
     try {
         const progresses = await sql`
       SELECT
@@ -122,6 +121,32 @@ export async function fetchProgresses() {
         progresses.evaluation,
         progresses.comments
       FROM progresses
+    `;
+
+        progresses.forEach((progress: any) => {
+            progress.date = new Date(progress.date);
+            progress.courseName = fetchCourseById(progress.courseid).then((course) => course.title);
+        });
+
+        return progresses;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch progress.');
+    }
+}
+
+export async function fetchProgressesByStudent(studentId : string) {
+    try {
+        const progresses = await sql`
+      SELECT
+        progresses.id,
+        progresses.courseId,
+        progresses.studentId,
+        progresses.date,
+        progresses.evaluation,
+        progresses.comments
+      FROM progresses
+      WHERE studentId = ${studentId}
     `;
 
         progresses.forEach((progress: any) => {
