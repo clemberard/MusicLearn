@@ -1,4 +1,5 @@
 'use client'
+
 import Link from "next/link";
 import { createCourse, getUser, StateCourses } from "@/app/lib/actions";
 import { useActionState } from "react";
@@ -9,7 +10,6 @@ export default function Form({teacherid} : {teacherid:string}) {
 
   return (
   <>
-    
     <form action={formAction}>
     <input type="hidden" name="teacherid" id="teacherid" value={teacherid} />
       <div className="rounded-md bg-gray-50 p-4 md:p-6">

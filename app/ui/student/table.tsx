@@ -1,4 +1,4 @@
-import {fetchCourses, fetchProgresses} from '@/app/lib/data';
+import {fetchCourses, fetchProgresses } from '@/app/lib/data';
 import {EnrollmentButton} from "@/app/ui/student/button";
 import Link from 'next/link';
 import { getUser } from "@/app/lib/actions";
@@ -42,9 +42,9 @@ export async function CoursesTable() {
                                 <td className="whitespace-nowrap px-3 py-3">{course.schedule}</td>
                                 <td className="whitespace-nowrap px-3 py-3">{course.capacity}</td>
                                 <td className="whitespace-nowrap px-3 py-3">
-                                    {course.enrollment ? (
-                                        course.enrollment.status
-                                    ) : (
+                                    {
+                                    course.enrollment ? ( course.enrollment.status ) : 
+                                    (
                                     <EnrollmentButton userId={user.id} courseId={course.id}>
                                         Enroll
                                     </EnrollmentButton>

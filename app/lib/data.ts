@@ -153,3 +153,18 @@ export async function fetchEnrollmentByCourseIdAndUserId(courseId: string, userI
         throw new Error('Failed to fetch enrollment.');
     }
 }
+
+export async function fetchNumberEnrollmentsByCourseId(courseId: string) {
+    try {
+      const numberEnrollment = await sql`
+      SELECT COUNT(*)
+      FROM enrollments
+      WHERE courseId = ${courseId}
+    `;
+
+      return Number(numberEnrollment[0]);
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch enrollment.');
+    }
+}

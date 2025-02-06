@@ -7,6 +7,7 @@ import postgres from "postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
+import { fetchNumberEnrollmentsByCourseId, fetchCourseById } from "@/app/lib/data";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
@@ -186,8 +187,7 @@ export async function enrollStudent(state: StateEnrollment, formData: FormData):
   });
 
   if (!validatedFields.success) {
-    const fieldErrors = validatedFields.error.flatten().fieldErrors;
-
+    const fieldErrors     = validatedFields.error.flatten().fieldErrors;
     const formattedErrors = Object.fromEntries(Object.entries(fieldErrors).map(([key, value]) => [key, value?.[0]]));
 
     return {
@@ -195,7 +195,9 @@ export async function enrollStudent(state: StateEnrollment, formData: FormData):
       errors: formattedErrors,
     };
   }
+
   const { userId, courseId } = validatedFields.data;
+
   try {
   if (!userId || !courseId) {
     return {
@@ -203,6 +205,17 @@ export async function enrollStudent(state: StateEnrollment, formData: FormData):
       errors: {
         userId: !userId ? "User ID is required" : undefined,
         courseId: !courseId ? "Course ID is required" : undefined,
+      },
+    };
+  }
+
+  const course = await fetchCourseById(courseId);
+
+  if (!await disponibility(courseId, course.capacity)) {
+    return {
+      message: "Course is full.",
+      errors: {
+        courseId: "Course is full.",
       },
     };
   }
@@ -218,7 +231,7 @@ export async function enrollStudent(state: StateEnrollment, formData: FormData):
 }
 
 
-// Users 
+// Users
 
 const FormSchemaUsers = z.object({
   name: z.string({
@@ -298,4 +311,11 @@ export async function fetchUsers() {
     console.error("Failed to fetch users :", error);
     throw new Error("Failed to fetch users");
   }
+}
+
+// private
+
+async function disponibility(courseId: string, capacity: number) {
+  const enrollments = await fetchNumberEnrollmentsByCourseId(courseId);
+  return enrollments < capacity;
 }
